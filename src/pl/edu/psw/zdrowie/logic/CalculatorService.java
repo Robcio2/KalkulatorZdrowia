@@ -45,4 +45,8 @@ public class CalculatorService {
     public static double calculateTDEE(double bmr, ActivityLevel activityLevel) {
         return bmr * activityLevel.getMultiplier();
     }
+
+    public static double calculateWaterNeeds(double weightKg){
+        return (weightKg * 30.0) / 1000.0;
+    }
 }

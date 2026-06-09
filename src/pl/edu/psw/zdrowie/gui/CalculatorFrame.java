@@ -122,6 +122,7 @@ public class CalculatorFrame extends JFrame {
             String bmiCategory = CalculatorService.getBMICategory(bmi);
             double bmr = CalculatorService.calculateBMR(isMale, weight, height, age);
             double tdee = CalculatorService.calculateTDEE(bmr, pal);
+            double waterLiters = CalculatorService.calculateWaterNeeds(weight);
 
             // Wyświetlenie wyników z formatowaniem do 2 miejsc po przecinku
             String resultText = String.format("""
@@ -132,7 +133,9 @@ public class CalculatorFrame extends JFrame {
                     
                     BMR (Spoczynkowy wydatek): %.2f kcal
                     TDEE (Całkowite zapotrzebowanie): %.2f kcal
-                    """, bmi, bmiCategory, bmr, tdee);
+                    
+                    Zalecane dzienne spożycie wody: %.2f litra
+                    """, bmi, bmiCategory, bmr, tdee, waterLiters);
 
             resultsArea.setText(resultText);
 
