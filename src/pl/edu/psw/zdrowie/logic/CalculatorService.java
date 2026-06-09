@@ -59,7 +59,7 @@ public class CalculatorService {
         double proteinGrams = proteinKcal / 4.0;
         double fatGrams = fatKcal / 9.0;
 
-        return String.format("Węglowodany: %0f g | Białoko: %.0f g | Tłuszcze: %.0f g",
+        return String.format("Węglowodany: %.0f g | Białoko: %.0f g | Tłuszcze: %.0f g",
                 carbsGrams, proteinGrams, fatGrams);
     }
 }
