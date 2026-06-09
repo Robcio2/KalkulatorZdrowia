@@ -10,6 +10,7 @@ import java.io.IOException;
 
 public class CalculatorFrame extends JFrame {
 
+    private JTextField nameField;
     private JRadioButton maleRadio;
     private JRadioButton femaleRadio;
     private JTextField ageField;
@@ -29,9 +30,13 @@ public class CalculatorFrame extends JFrame {
     }
 
     private void initComponents() {
-        // --- Panel Danych (Siatka / GridLayout) ---
-        JPanel dataPanel = new JPanel(new GridLayout(6, 2, 10, 10));
+        // Panel Danych
+        JPanel dataPanel = new JPanel(new GridLayout(7, 2, 10, 10));
         dataPanel.setBorder(BorderFactory.createTitledBorder("Dane personalne"));
+
+        dataPanel.add(new JLabel("Imie:"));
+        nameField = new JTextField();
+        dataPanel.add(nameField);
 
         dataPanel.add(new JLabel("Płeć:"));
         JPanel genderPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -62,7 +67,7 @@ public class CalculatorFrame extends JFrame {
 
         add(dataPanel, BorderLayout.NORTH);
 
-        // --- Panel Wyników ---
+        // Panel Wyników
         resultsArea = new JTextArea();
         resultsArea.setEditable(false);
         resultsArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
@@ -70,7 +75,7 @@ public class CalculatorFrame extends JFrame {
         scrollPane.setBorder(BorderFactory.createTitledBorder("Wyniki"));
         add(scrollPane, BorderLayout.CENTER);
 
-        // --- Panel Akcji ---
+        // Panel Akcji
         JPanel actionPanel = new JPanel(new FlowLayout());
 
         JButton calculateBtn = new JButton("Oblicz");
@@ -88,7 +93,12 @@ public class CalculatorFrame extends JFrame {
     }
 
     private void calculateResults() {
-        try {
+        try {  // imie blank = intognito
+            String name = nameField.getText();
+            if(name.isEmpty()){
+                name = "Nieznajomy";
+            }
+
             // Walidacja płci
             if (!maleRadio.isSelected() && !femaleRadio.isSelected()) {
                 throw new IllegalArgumentException("Proszę wybrać płeć.");
@@ -126,7 +136,7 @@ public class CalculatorFrame extends JFrame {
             String macroInfo = CalculatorService.getMacroNutrients(tdee);
 
             String resultText = String.format("""
-                    Zestawienie wyników:
+                    Zestawienie wyników dla: %s
                     -------------------------------------
                     BMI: %.2f
                     Kategoria WHO: %s
@@ -138,7 +148,7 @@ public class CalculatorFrame extends JFrame {
                     %s
                       
                     Zalecane dzienne spożycie wody: %.2f litra
-                    """, bmi, bmiCategory, bmr, tdee, macroInfo, waterLiters);
+                    """, name, bmi, bmiCategory, bmr, tdee, macroInfo, waterLiters);
 
             resultsArea.setText(resultText);
 
@@ -148,6 +158,7 @@ public class CalculatorFrame extends JFrame {
     }
 
     private void clearFields(ButtonGroup genderGroup) {
+        nameField.setText("");
         genderGroup.clearSelection();
         ageField.setText("");
         heightField.setText("");
