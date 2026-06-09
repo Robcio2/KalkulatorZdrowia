@@ -22,12 +22,13 @@ public class CalculatorFrame extends JFrame {
     private JTextArea resultsArea;
 
     public CalculatorFrame() {
-        setTitle("Kalkulator Zdrowia (BMI & BMR)");
+        setTitle("Kalkulator Zdrowia");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(500, 600);
+        setSize(600, 700);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(10, 10));
 
+        createMenuBar();
         initComponents();
     }
 
@@ -202,4 +203,46 @@ public class CalculatorFrame extends JFrame {
             throw new IllegalArgumentException("Błędny format w polu " + fieldName + ".");
         }
     }
+    private void showAboutDialog() {
+        String aboutText = """
+                Kalkulator Zdrowia (BMI & BMR) v1.0
+                
+                Autor: Robert Tymoszuk
+                Projekt zaliczeniowy
+                
+                Funkcje programu:
+                - Obliczanie BMI oraz BMR
+                - Wyliczanie TDEE (całkowitego zapotrzebowania)
+                - Rozkład makroskładników wg wybranego celu diety
+                - Obliczanie zapotrzebowania na wodę
+                - Zapis wyników do pliku
+                - Cel deity
+                """;
+
+        JOptionPane.showMessageDialog(this, aboutText, "O programie", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void createMenuBar() {
+        JMenuBar menuBar = new JMenuBar();
+
+        JMenu fileMenu = new JMenu("Plik");
+
+        JMenuItem exitItem = new JMenuItem("Zakończ");
+        exitItem.addActionListener(e -> System.exit(0));
+
+        fileMenu.add(exitItem);
+
+        JMenu helpMenu = new JMenu("Pomoc");
+
+        JMenuItem aboutItem = new JMenuItem("O programie");
+        aboutItem.addActionListener(e -> showAboutDialog());
+
+        helpMenu.add(aboutItem);
+
+        menuBar.add(fileMenu);
+        menuBar.add(helpMenu);
+
+        setJMenuBar(menuBar);
+    }
+
 }
