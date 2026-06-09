@@ -24,6 +24,30 @@ public class CalculatorService {
         public String toString() { return description; }
     }
 
+    public enum DietGoal {
+        UTRZYMANIE(0, "Utrzymanie wagi"),
+        REDUKCJA(-300, "Redukcja tkanki tłuszczowej"),
+        MASA(300, "Budowa masy mięśniowej");
+
+        private final int calorieAdjustment;
+        private final String description;
+
+        DietGoal(int calorieAdjustment, String description) {
+            this.calorieAdjustment = calorieAdjustment;
+            this.description = description;
+        }
+
+        public int getCalorieAdjustment() { return calorieAdjustment; }
+
+        @Override
+        public String toString() { return description; }
+    }
+
+    // Obliczanie docelowych kalorii
+    public static double calculateTargetCalories(double tdee, DietGoal goal) {
+        return tdee + goal.getCalorieAdjustment();
+    }
+
     public static double calculateBMI(double weightKg, double heightCm) {
         double heightM = heightCm / 100.0;
         return weightKg / (heightM * heightM);

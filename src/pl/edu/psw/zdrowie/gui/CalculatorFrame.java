@@ -3,6 +3,7 @@ package pl.edu.psw.zdrowie.gui;
 import pl.edu.psw.zdrowie.logic.CalculatorService;
 import pl.edu.psw.zdrowie.logic.CalculatorService.ActivityLevel;
 import pl.edu.psw.zdrowie.logic.FileService;
+import pl.edu.psw.zdrowie.logic.CalculatorService.DietGoal;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,6 +18,7 @@ public class CalculatorFrame extends JFrame {
     private JTextField heightField;
     private JTextField weightField;
     private JComboBox<ActivityLevel> activityComboBox;
+    private JComboBox<DietGoal> goalComboBox;
     private JTextArea resultsArea;
 
     public CalculatorFrame() {
@@ -31,7 +33,7 @@ public class CalculatorFrame extends JFrame {
 
     private void initComponents() {
         // Panel Danych
-        JPanel dataPanel = new JPanel(new GridLayout(7, 2, 10, 10));
+        JPanel dataPanel = new JPanel(new GridLayout(8, 2, 10, 10));
         dataPanel.setBorder(BorderFactory.createTitledBorder("Dane personalne"));
 
         dataPanel.add(new JLabel("Imie:"));
@@ -64,6 +66,10 @@ public class CalculatorFrame extends JFrame {
         dataPanel.add(new JLabel("Aktywność fizyczna:"));
         activityComboBox = new JComboBox<>(ActivityLevel.values());
         dataPanel.add(activityComboBox);
+
+        dataPanel.add(new JLabel("Cel diety:"));
+        goalComboBox = new JComboBox<>(DietGoal.values());
+        dataPanel.add(goalComboBox);
 
         add(dataPanel, BorderLayout.NORTH);
 
@@ -133,7 +139,9 @@ public class CalculatorFrame extends JFrame {
             double bmr = CalculatorService.calculateBMR(isMale, weight, height, age);
             double tdee = CalculatorService.calculateTDEE(bmr, pal);
             double waterLiters = CalculatorService.calculateWaterNeeds(weight);
-            String macroInfo = CalculatorService.getMacroNutrients(tdee);
+            DietGoal goal = (DietGoal) goalComboBox.getSelectedItem();
+            double targetCalories = CalculatorService.calculateTargetCalories(tdee, goal);
+            String macroInfo = CalculatorService.getMacroNutrients(targetCalories);
 
             String resultText = String.format("""
                     Zestawienie wyników dla: %s
@@ -144,11 +152,14 @@ public class CalculatorFrame extends JFrame {
                     BMR (Spoczynkowy wydatek): %.2f kcal
                     TDEE (Całkowite zapotrzebowanie): %.2f kcal
                     
+                    Twój cel: %s
+                    Zalecane kalorie względem celu: %.2f kcal
+                    
                     Rozkład makroskładników:
                     %s
                       
                     Zalecane dzienne spożycie wody: %.2f litra
-                    """, name, bmi, bmiCategory, bmr, tdee, macroInfo, waterLiters);
+                    """, name, bmi, bmiCategory, bmr, tdee, goal.toString(), targetCalories, macroInfo, waterLiters);
 
             resultsArea.setText(resultText);
 
