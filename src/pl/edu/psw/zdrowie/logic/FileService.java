@@ -19,4 +19,10 @@ public class FileService {
             writer.write("\n\n");
         }
     }
+
+    public static String readHistory() throws IOException {
+        java.nio.file.Path path = java.nio.file.Paths.get(FILE_NAME);
+        if (!java.nio.file.Files.exists(path)) return "Brak historii pomiarów.";
+        return java.nio.file.Files.readString(path);
+    }
 }

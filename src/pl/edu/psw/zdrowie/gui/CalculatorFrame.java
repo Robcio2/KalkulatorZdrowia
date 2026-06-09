@@ -37,7 +37,7 @@ public class CalculatorFrame extends JFrame {
         JPanel dataPanel = new JPanel(new GridLayout(8, 2, 10, 10));
         dataPanel.setBorder(BorderFactory.createTitledBorder("Dane personalne"));
 
-        dataPanel.add(new JLabel("Imie:"));
+        dataPanel.add(new JLabel("Imię:"));
         nameField = new JTextField();
         dataPanel.add(nameField);
 
@@ -58,10 +58,12 @@ public class CalculatorFrame extends JFrame {
 
         dataPanel.add(new JLabel("Wzrost (cm):"));
         heightField = new JTextField();
+        heightField.setToolTipText("Wpisz swój wzrost");
         dataPanel.add(heightField);
 
         dataPanel.add(new JLabel("Waga (kg):"));
         weightField = new JTextField();
+        weightField.setToolTipText("Wpisz swoją wagę");
         dataPanel.add(weightField);
 
         dataPanel.add(new JLabel("Aktywność fizyczna:"));
@@ -88,22 +90,28 @@ public class CalculatorFrame extends JFrame {
         JButton calculateBtn = new JButton("Oblicz");
         JButton clearBtn = new JButton("Wyczyść");
         JButton saveBtn = new JButton("Zapisz wynik");
+        JButton historyBtn = new JButton("Pokaż historię");
 
         calculateBtn.addActionListener(e -> calculateResults());
         clearBtn.addActionListener(e -> clearFields(genderGroup));
         saveBtn.addActionListener(e -> saveCurrentResults());
+        historyBtn.addActionListener(e -> showHistory());
 
         actionPanel.add(calculateBtn);
         actionPanel.add(clearBtn);
         actionPanel.add(saveBtn);
+        actionPanel.add(historyBtn);
+
         add(actionPanel, BorderLayout.SOUTH);
     }
 
     private void calculateResults() {
         try {  // imie blank = intognito
             String name = nameField.getText();
-            if(name.isEmpty()){
+            if(name.isBlank()){
                 name = "Nieznajomy";
+            } else{
+                name = name.substring(0, 1).toUpperCase() + name.substring(1);
             }
 
             // Walidacja płci
@@ -125,11 +133,11 @@ public class CalculatorFrame extends JFrame {
 
             // Walidacja wzrostu
             double height = parseDoubleInput(heightField.getText().trim(), "wzrostu");
-            if (height <= 20 || height >= 300) throw new IllegalArgumentException("Wzrost musi być w przedziale 50-300.");
+            if (height < 50 || height > 300) throw new IllegalArgumentException("Wzrost musi być w przedziale 50-300.");
 
             // Walidacja wagi
             double weight = parseDoubleInput(weightField.getText().trim(), "wagi");
-            if (weight <= 2 || weight >= 500) throw new IllegalArgumentException("Waga musi być w przedziale 2-500.");
+            if (weight < 2 || weight > 500) throw new IllegalArgumentException("Waga musi być w przedziale 2-500.");
 
             // Aktywność
             ActivityLevel pal = (ActivityLevel) activityComboBox.getSelectedItem();
@@ -216,7 +224,7 @@ public class CalculatorFrame extends JFrame {
                 - Rozkład makroskładników wg wybranego celu diety
                 - Obliczanie zapotrzebowania na wodę
                 - Zapis wyników do pliku
-                - Cel deity
+                - Cel diety
                 """;
 
         JOptionPane.showMessageDialog(this, aboutText, "O programie", JOptionPane.INFORMATION_MESSAGE);
@@ -243,6 +251,23 @@ public class CalculatorFrame extends JFrame {
         menuBar.add(helpMenu);
 
         setJMenuBar(menuBar);
+    }
+
+    private void showHistory() {
+        try {
+            String historia = FileService.readHistory();
+
+            JTextArea textArea = new JTextArea(historia);
+            textArea.setEditable(false);
+
+            JScrollPane scrollPane = new JScrollPane(textArea);
+            scrollPane.setPreferredSize(new Dimension(400, 300));
+
+            JOptionPane.showMessageDialog(this, scrollPane, "Historia pomiarów", JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this, "Błąd podczas odczytu pliku: " + ex.getMessage(), "Błąd", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
 }
