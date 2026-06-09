@@ -49,7 +49,7 @@ public class CalculatorFrame extends JFrame {
         genderPanel.add(femaleRadio);
         dataPanel.add(genderPanel);
 
-        dataPanel.add(new JLabel("Wiek (1-120 lat):"));
+        dataPanel.add(new JLabel("Wiek (lat):"));
         ageField = new JTextField();
         dataPanel.add(ageField);
 
@@ -61,7 +61,7 @@ public class CalculatorFrame extends JFrame {
         weightField = new JTextField();
         dataPanel.add(weightField);
 
-        dataPanel.add(new JLabel("Aktywność fizyczna (PAL):"));
+        dataPanel.add(new JLabel("Aktywność fizyczna:"));
         activityComboBox = new JComboBox<>(ActivityLevel.values());
         dataPanel.add(activityComboBox);
 
@@ -118,11 +118,11 @@ public class CalculatorFrame extends JFrame {
 
             // Walidacja wzrostu
             double height = parseDoubleInput(heightField.getText().trim(), "wzrostu");
-            if (height <= 0) throw new IllegalArgumentException("Wzrost musi być większy od 0.");
+            if (height <= 20 || height >= 300) throw new IllegalArgumentException("Wzrost musi być w przedziale 50-300.");
 
             // Walidacja wagi
             double weight = parseDoubleInput(weightField.getText().trim(), "wagi");
-            if (weight <= 0) throw new IllegalArgumentException("Waga musi być większa od 0.");
+            if (weight <= 2 || weight >= 500) throw new IllegalArgumentException("Waga musi być w przedziale 2-500.");
 
             // Aktywność
             ActivityLevel pal = (ActivityLevel) activityComboBox.getSelectedItem();
