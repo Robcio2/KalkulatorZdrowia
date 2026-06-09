@@ -49,4 +49,17 @@ public class CalculatorService {
     public static double calculateWaterNeeds(double weightKg){
         return (weightKg * 30.0) / 1000.0;
     }
+
+    public static String getMacroNutrients(double tdee){
+        double carbsKcal = tdee * 0.50;
+        double proteinKcal = tdee * 0.20;
+        double fatKcal = tdee * 0.30;
+
+        double carbsGrams = carbsKcal / 4.0;
+        double proteinGrams = proteinKcal / 4.0;
+        double fatGrams = fatKcal / 9.0;
+
+        return String.format("Węglowodany: %0f g | Białoko: %.0f g | Tłuszcze: %.0f g",
+                carbsGrams, proteinGrams, fatGrams);
+    }
 }

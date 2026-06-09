@@ -123,8 +123,8 @@ public class CalculatorFrame extends JFrame {
             double bmr = CalculatorService.calculateBMR(isMale, weight, height, age);
             double tdee = CalculatorService.calculateTDEE(bmr, pal);
             double waterLiters = CalculatorService.calculateWaterNeeds(weight);
+            String macroInfo = CalculatorService.getMacroNutrients(tdee);
 
-            // Wyświetlenie wyników z formatowaniem do 2 miejsc po przecinku
             String resultText = String.format("""
                     Zestawienie wyników:
                     -------------------------------------
@@ -134,8 +134,11 @@ public class CalculatorFrame extends JFrame {
                     BMR (Spoczynkowy wydatek): %.2f kcal
                     TDEE (Całkowite zapotrzebowanie): %.2f kcal
                     
+                    Rozkład makroskładników:
+                    %s
+                      
                     Zalecane dzienne spożycie wody: %.2f litra
-                    """, bmi, bmiCategory, bmr, tdee, waterLiters);
+                    """, bmi, bmiCategory, bmr, tdee, macroInfo, waterLiters);
 
             resultsArea.setText(resultText);
 
